@@ -1,0 +1,63 @@
+@page
+@model LabourSkillsPlatform.Areas.Employer.Pages.DashboardModel
+@{
+    ViewData["Title"] = "Employer Dashboard";
+}
+
+<h3 class="fw-bold mb-1">Welcome, @Model.CurrentEmployer?.CompanyName</h3>
+
+@if (Model.CurrentEmployer is not null && !Model.CurrentEmployer.IsApproved)
+{
+    <div class="alert alert-warning mt-3">
+        <i class="bi bi-hourglass-split"></i> Your employer account is <strong>pending approval</strong> by an administrator.
+        You will be able to post jobs once approved.
+    </div>
+}
+
+<div class="row g-3 my-2">
+    <div class="col-6 col-lg-4">
+        <div class="card metric-card p-3">
+            <div class="text-muted small">Jobs Posted</div>
+            <div class="metric-value text-primary">@Model.TotalJobsPosted</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-4">
+        <div class="card metric-card p-3">
+            <div class="text-muted small">Open Jobs</div>
+            <div class="metric-value text-primary">@Model.OpenJobs</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-4">
+        <div class="card metric-card p-3">
+            <div class="text-muted small">Applications Received</div>
+            <div class="metric-value text-primary">@Model.TotalApplicationsReceived</div>
+        </div>
+    </div>
+</div>
+
+<div class="card p-3 mt-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="fw-bold mb-0">Recent Job Posts</h6>
+        <a asp-page="/Jobs/Index" class="btn btn-sm btn-outline-primary">View All</a>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead><tr><th>Title</th><th>Category</th><th>Applications</th><th>Status</th></tr></thead>
+            <tbody>
+            @foreach (var job in Model.RecentJobs)
+            {
+                <tr>
+                    <td><a asp-page="/Jobs/Details" asp-route-id="@job.Id">@job.Title</a></td>
+                    <td>@job.Category.Name</td>
+                    <td>@job.Applications.Count</td>
+                    <td><span class="badge badge-status-@job.Status.ToString().ToLower()">@job.Status</span></td>
+                </tr>
+            }
+            @if (!Model.RecentJobs.Any())
+            {
+                <tr><td colspan="4" class="text-center text-muted py-4">You haven't posted any jobs yet.</td></tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

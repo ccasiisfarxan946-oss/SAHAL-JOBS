@@ -1,0 +1,60 @@
+@page "{id:int}"
+@model LabourSkillsPlatform.Areas.Labourer.Pages.Jobs.DetailsModel
+@{
+    ViewData["Title"] = "Job Details";
+}
+
+<h3 class="fw-bold mb-1">@Model.Job.Title</h3>
+<div class="mb-3">
+    <span class="badge badge-status-@Model.Job.Status.ToString().ToLower()">@Model.Job.Status</span>
+    <span class="badge bg-secondary">@Model.Job.Category.Name</span>
+    <span class="match-score-pill bg-primary text-white">Your match: @Model.MyMatchScore%</span>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-7">
+        <div class="card p-3 mb-3">
+            <h6 class="fw-bold">Description</h6>
+            <p class="text-muted">@Model.Job.Description</p>
+            <div class="row text-muted small">
+                <div class="col-6"><i class="bi bi-building"></i> @Model.Job.Employer.CompanyName</div>
+                <div class="col-6"><i class="bi bi-geo-alt"></i> @(Model.Job.Location ?? "Not specified")</div>
+                <div class="col-6"><i class="bi bi-cash"></i> $@Model.Job.Budget.ToString("N2") (@Model.Job.JobType)</div>
+                @if (Model.Job.Deadline.HasValue)
+                {
+                    <div class="col-6"><i class="bi bi-calendar"></i> Deadline: @Model.Job.Deadline.Value.ToString("dd MMM yyyy")</div>
+                }
+            </div>
+            <div class="mt-2">
+                @foreach (var js in Model.Job.JobSkills)
+                {
+                    <span class="badge bg-light text-dark border me-1">@js.Skill.Name</span>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="card p-3">
+            @if (Model.AlreadyApplied)
+            {
+                <div class="alert alert-info mb-0">You have already applied to this job.</div>
+            }
+            else if (Model.Job.Status != LabourSkillsPlatform.Models.JobStatus.Open)
+            {
+                <div class="alert alert-secondary mb-0">This job is no longer open for applications.</div>
+            }
+            else
+            {
+                <h6 class="fw-bold mb-3">Apply for this Job</h6>
+                <form method="post" asp-page-handler="Apply" asp-route-id="@Model.Job.Id">
+                    <div class="mb-3">
+                        <label asp-for="Input.CoverMessage" class="form-label"></label>
+                        <textarea asp-for="Input.CoverMessage" class="form-control" rows="4" placeholder="Introduce yourself and explain why you're a good fit..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100"><i class="bi bi-send"></i> Submit Application</button>
+                </form>
+            }
+        </div>
+    </div>
+</div>

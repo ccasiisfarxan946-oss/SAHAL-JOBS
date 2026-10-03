@@ -1,0 +1,77 @@
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<LabourSkillsPlatform.Models.ApplicationUser> SignInManager
+@inject UserManager<LabourSkillsPlatform.Models.ApplicationUser> UserManager
+@{
+    var currentArea = ViewContext.RouteData.Values["area"]?.ToString() ?? "Admin";
+    var currentUser = await UserManager.GetUserAsync(User);
+    var currentPage = ViewContext.ActionDescriptor.DisplayName ?? "";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - LSP @currentArea Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body class="dashboard-body @ViewData["BodyClass"]">
+    <nav class="navbar navbar-expand-lg navbar-dark dashboard-topbar sticky-top">
+        <div class="container-fluid px-3">
+            <button class="btn btn-link text-white d-lg-none" id="sidebarToggle"><i class="bi bi-list fs-4"></i></button>
+            <a class="navbar-brand fw-bold" href="/">
+                <i class="bi bi-hammer"></i> SAHAL<span class="text-warning">JOP</span>
+            </a>
+            <div class="ms-auto d-flex align-items-center gap-3">
+                <span class="badge bg-light text-dark">@currentArea Panel</span>
+                <div class="dropdown">
+                    <a class="text-white text-decoration-none dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-person-circle"></i> @currentUser?.FullName
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <form asp-area="Identity" asp-page="/Account/Logout" method="post">
+                                <button type="submit" class="dropdown-item"><i class="bi bi-box-arrow-right"></i> Sign Out</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="d-flex dashboard-shell">
+        <aside class="dashboard-sidebar" id="dashboardSidebar">
+            <partial name="_Sidebar" />
+        </aside>
+
+        <main class="dashboard-content flex-grow-1 p-3 p-md-4">
+            @if (TempData["StatusMessage"] is string status)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @status
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+            @if (TempData["ErrorMessage"] is string err)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @err
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js"></script>
+    <script>
+        document.getElementById('sidebarToggle')?.addEventListener('click', function () {
+            document.getElementById('dashboardSidebar').classList.toggle('show');
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

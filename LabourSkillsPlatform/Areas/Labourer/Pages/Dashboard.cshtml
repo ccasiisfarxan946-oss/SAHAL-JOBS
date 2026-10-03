@@ -1,0 +1,62 @@
+@page
+@model LabourSkillsPlatform.Areas.Labourer.Pages.DashboardModel
+@{
+    ViewData["Title"] = "Labourer Dashboard";
+}
+
+<h3 class="fw-bold mb-1">Welcome, @Model.CurrentLabourer?.User.FullName</h3>
+<p class="text-muted">@Model.CurrentLabourer?.AvailabilityStatus &middot; @Model.CurrentLabourer?.AverageRating.ToString("N1") &#9733; (@Model.CurrentLabourer?.TotalReviews reviews)</p>
+
+<div class="row g-3 my-2">
+    <div class="col-6 col-lg-3">
+        <div class="card metric-card p-3">
+            <div class="text-muted small">Skills Uploaded</div>
+            <div class="metric-value text-primary">@Model.TotalSkills</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card metric-card p-3">
+            <div class="text-muted small">Verified Skills</div>
+            <div class="metric-value text-primary">@Model.VerifiedSkills</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card metric-card p-3">
+            <div class="text-muted small">Applications Sent</div>
+            <div class="metric-value text-primary">@Model.TotalApplications</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card metric-card p-3">
+            <div class="text-muted small">Jobs Hired For</div>
+            <div class="metric-value text-primary">@Model.AcceptedApplications</div>
+        </div>
+    </div>
+</div>
+
+<div class="card p-3 mt-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="fw-bold mb-0">Recent Applications</h6>
+        <a asp-page="/Applications/Index" class="btn btn-sm btn-outline-primary">View All</a>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead><tr><th>Job</th><th>Employer</th><th>Match Score</th><th>Status</th></tr></thead>
+            <tbody>
+            @foreach (var app in Model.RecentApplications)
+            {
+                <tr>
+                    <td>@app.Job.Title</td>
+                    <td>@app.Job.Employer.CompanyName</td>
+                    <td><span class="match-score-pill bg-light text-dark border">@app.MatchScore%</span></td>
+                    <td><span class="badge badge-status-@app.Status.ToString().ToLower()">@app.Status</span></td>
+                </tr>
+            }
+            @if (!Model.RecentApplications.Any())
+            {
+                <tr><td colspan="4" class="text-center text-muted py-4">You haven't applied to any jobs yet.</td></tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

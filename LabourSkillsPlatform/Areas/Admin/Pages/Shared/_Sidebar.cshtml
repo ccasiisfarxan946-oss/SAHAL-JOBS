@@ -1,0 +1,17 @@
+@{
+    string CurrentPath(string page) => ViewContext.RouteData.Values["page"]?.ToString() ?? "";
+}
+<div class="sidebar-inner">
+    <div class="sidebar-heading">Admin Menu</div>
+    <ul class="nav flex-column">
+        <li class="nav-item"><a class="nav-link" asp-area="Admin" asp-page="/Dashboard"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link" asp-area="Admin" asp-page="/Users/Index"><i class="bi bi-people"></i> Manage Users</a></li>
+        <li class="nav-item"><a class="nav-link" asp-area="Admin" asp-page="/Categories/Index"><i class="bi bi-tags"></i> Labour Categories</a></li>
+        <li class="nav-item"><a class="nav-link" asp-area="Admin" asp-page="/Skills/Index"><i class="bi bi-patch-check"></i> Verify Skills</a></li>
+        <li class="nav-item"><a class="nav-link" asp-area="Admin" asp-page="/Employers/Index"><i class="bi bi-building-check"></i> Approve Employers</a></li>
+        <li class="nav-item"><a class="nav-link" asp-area="Admin" asp-page="/Jobs/Index"><i class="bi bi-briefcase"></i> Manage Jobs</a></li>
+        <li class="nav-item"><a class="nav-link" asp-area="Admin" asp-page="/Reviews/Index"><i class="bi bi-star"></i> Manage Reviews</a></li>
+        <li class="nav-item"><a class="nav-link" asp-area="Admin" asp-page="/Reports/Index"><i class="bi bi-bar-chart"></i> View Reports</a></li>
+        <li class="nav-item"><a class="nav-link" asp-area="Admin" asp-page="/Settings/Index"><i class="bi bi-gear"></i> System Settings</a></li>
+    </ul>
+</div>

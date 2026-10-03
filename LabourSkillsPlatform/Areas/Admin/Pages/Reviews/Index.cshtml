@@ -1,0 +1,40 @@
+@page
+@model LabourSkillsPlatform.Areas.Admin.Pages.Reviews.IndexModel
+@{
+    ViewData["Title"] = "Manage Reviews";
+}
+
+<h3 class="fw-bold mb-4">Manage Reviews</h3>
+
+<div class="card p-3">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead><tr><th>Job</th><th>From</th><th>To</th><th>Rating</th><th>Comment</th><th>Type</th><th class="text-end">Action</th></tr></thead>
+            <tbody>
+            @foreach (var review in Model.Reviews)
+            {
+                <tr class="@(review.IsFlagged ? "table-warning" : "")">
+                    <td>@review.Job.Title</td>
+                    <td>@review.Reviewer.FullName</td>
+                    <td>@review.Reviewee.FullName</td>
+                    <td class="text-warning">@string.Concat(Enumerable.Repeat("&#9733;", review.Rating))@string.Concat(Enumerable.Repeat("&#9734;", 5 - review.Rating))</td>
+                    <td class="text-muted small">@(review.Comment ?? "—")</td>
+                    <td><span class="badge bg-secondary">@review.ReviewType</span></td>
+                    <td class="text-end">
+                        <form method="post" asp-page-handler="Flag" asp-route-id="@review.Id" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-outline-warning">@(review.IsFlagged ? "Unflag" : "Flag")</button>
+                        </form>
+                        <form method="post" asp-page-handler="Delete" asp-route-id="@review.Id" class="d-inline" data-confirm="Delete this review permanently?">
+                            <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            @if (!Model.Reviews.Any())
+            {
+                <tr><td colspan="7" class="text-center text-muted py-4">No reviews submitted yet.</td></tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

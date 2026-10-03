@@ -1,0 +1,14 @@
+@page
+@model LabourSkillsPlatform.Pages.ErrorModel
+@{
+    ViewData["Title"] = "Error";
+}
+<div class="container text-center py-5">
+    <h1 class="text-danger">An error occurred</h1>
+    <p class="text-muted">Sorry, something went wrong while processing your request.</p>
+    @if (Model.ShowRequestId)
+    {
+        <p><small>Request ID: <code>@Model.RequestId</code></small></p>
+    }
+    <a href="/" class="btn btn-primary">Return Home</a>
+</div>

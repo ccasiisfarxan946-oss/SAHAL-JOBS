@@ -1,0 +1,34 @@
+@page
+@model LabourSkillsPlatform.Areas.Admin.Pages.Settings.IndexModel
+@{
+    ViewData["Title"] = "System Settings";
+}
+
+<h3 class="fw-bold mb-4">System Settings</h3>
+
+<div class="card p-4" style="max-width:560px;">
+    <h6 class="fw-bold mb-3">Change Admin Password</h6>
+    <form method="post">
+        <div asp-validation-summary="All" class="alert alert-danger"></div>
+
+        <div class="mb-3">
+            <label asp-for="Input.CurrentPassword" class="form-label"></label>
+            <input asp-for="Input.CurrentPassword" class="form-control" />
+            <span asp-validation-for="Input.CurrentPassword" class="text-danger small"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Input.NewPassword" class="form-label"></label>
+            <input asp-for="Input.NewPassword" class="form-control" />
+            <span asp-validation-for="Input.NewPassword" class="text-danger small"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Input.ConfirmPassword" class="form-label"></label>
+            <input asp-for="Input.ConfirmPassword" class="form-control" />
+            <span asp-validation-for="Input.ConfirmPassword" class="text-danger small"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update Password</button>
+    </form>
+</div>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

@@ -1,0 +1,38 @@
+@page
+@model LabourSkillsPlatform.Areas.Admin.Pages.Categories.IndexModel
+@{
+    ViewData["Title"] = "Labour Categories";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold mb-0">Labour Categories</h3>
+    <a asp-page="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Add Category</a>
+</div>
+
+<div class="card p-3">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead><tr><th>Name</th><th>Description</th><th>Skills</th><th class="text-end">Actions</th></tr></thead>
+            <tbody>
+            @foreach (var category in Model.Categories)
+            {
+                <tr>
+                    <td class="fw-semibold">@category.Name</td>
+                    <td class="text-muted">@category.Description</td>
+                    <td><span class="badge bg-secondary">@category.Skills.Count skills</span></td>
+                    <td class="text-end">
+                        <a asp-page="Edit" asp-route-id="@category.Id" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+                        <form method="post" asp-page-handler="Delete" asp-route-id="@category.Id" class="d-inline" data-confirm="Delete this category?">
+                            <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            @if (!Model.Categories.Any())
+            {
+                <tr><td colspan="4" class="text-center text-muted py-4">No categories yet.</td></tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

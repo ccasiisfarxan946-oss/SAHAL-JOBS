@@ -1,0 +1,41 @@
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<LabourSkillsPlatform.Models.ApplicationUser> SignInManager
+@inject UserManager<LabourSkillsPlatform.Models.ApplicationUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    var currentUser = await UserManager.GetUserAsync(User);
+    var roles = currentUser is not null ? await UserManager.GetRolesAsync(currentUser) : new List<string>();
+    var role = roles.FirstOrDefault() ?? "Labourer";
+
+    <li class="nav-item">
+        <a class="nav-link" asp-area="@role" asp-page="/Dashboard">
+            <i class="bi bi-speedometer2"></i> Dashboard
+        </a>
+    </li>
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            <i class="bi bi-person-circle"></i> @currentUser?.FullName
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end">
+            <li><span class="dropdown-item-text small text-muted">Role: @role</span></li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+                <form asp-area="Identity" asp-page="/Account/Logout" method="post">
+                    <button type="submit" class="dropdown-item">
+                        <i class="bi bi-box-arrow-right"></i> Sign Out
+                    </button>
+                </form>
+            </li>
+        </ul>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link" asp-area="Identity" asp-page="/Account/Login">Sign In</a>
+    </li>
+    <li class="nav-item">
+        <a class="btn btn-primary btn-sm px-3" asp-area="Identity" asp-page="/Account/Register">Get Started</a>
+    </li>
+}

@@ -1,0 +1,32 @@
+@page
+@model LabourSkillsPlatform.Areas.Labourer.Pages.Applications.IndexModel
+@{
+    ViewData["Title"] = "My Applications";
+}
+
+<h3 class="fw-bold mb-4">My Applications</h3>
+
+<div class="card p-3">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead><tr><th>Job</th><th>Employer</th><th>Category</th><th>Match Score</th><th>Applied On</th><th>Status</th></tr></thead>
+            <tbody>
+            @foreach (var app in Model.Applications)
+            {
+                <tr>
+                    <td><a asp-page="/Jobs/Details" asp-route-id="@app.JobId">@app.Job.Title</a></td>
+                    <td>@app.Job.Employer.CompanyName</td>
+                    <td>@app.Job.Category.Name</td>
+                    <td><span class="match-score-pill bg-light text-dark border">@app.MatchScore%</span></td>
+                    <td>@app.AppliedDate.ToString("dd MMM yyyy")</td>
+                    <td><span class="badge badge-status-@app.Status.ToString().ToLower()">@app.Status</span></td>
+                </tr>
+            }
+            @if (!Model.Applications.Any())
+            {
+                <tr><td colspan="6" class="text-center text-muted py-4">You haven't applied to any jobs yet.</td></tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

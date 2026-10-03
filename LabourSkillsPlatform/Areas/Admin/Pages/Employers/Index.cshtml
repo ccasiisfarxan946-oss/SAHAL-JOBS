@@ -1,0 +1,64 @@
+@page
+@model LabourSkillsPlatform.Areas.Admin.Pages.Employers.IndexModel
+@{
+    ViewData["Title"] = "Approve Employers";
+}
+
+<h3 class="fw-bold mb-4">Approve Employers</h3>
+
+<div class="card p-3 mb-4">
+    <h6 class="fw-bold mb-3">Pending Approval (<span class="text-warning">@Model.PendingEmployers.Count</span>)</h6>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead><tr><th>Company</th><th>Contact Person</th><th>Email</th><th>Registered</th><th class="text-end">Action</th></tr></thead>
+            <tbody>
+            @foreach (var emp in Model.PendingEmployers)
+            {
+                <tr>
+                    <td class="fw-semibold">@emp.CompanyName</td>
+                    <td>@(emp.ContactPerson ?? emp.User.FullName)</td>
+                    <td>@emp.User.Email</td>
+                    <td>@emp.RegisteredAt.ToString("dd MMM yyyy")</td>
+                    <td class="text-end">
+                        <form method="post" asp-page-handler="Approve" asp-route-id="@emp.Id" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-success"><i class="bi bi-check-lg"></i> Approve</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            @if (!Model.PendingEmployers.Any())
+            {
+                <tr><td colspan="5" class="text-center text-muted py-4">No pending employer approvals.</td></tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card p-3">
+    <h6 class="fw-bold mb-3">Approved Employers</h6>
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead><tr><th>Company</th><th>Email</th><th>Jobs Posted</th><th class="text-end">Action</th></tr></thead>
+            <tbody>
+            @foreach (var emp in Model.ApprovedEmployers)
+            {
+                <tr>
+                    <td class="fw-semibold">@emp.CompanyName</td>
+                    <td>@emp.User.Email</td>
+                    <td>@emp.Jobs.Count</td>
+                    <td class="text-end">
+                        <form method="post" asp-page-handler="Revoke" asp-route-id="@emp.Id" data-confirm="Revoke this employer's approval?">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Revoke</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            @if (!Model.ApprovedEmployers.Any())
+            {
+                <tr><td colspan="4" class="text-center text-muted py-4">No approved employers yet.</td></tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

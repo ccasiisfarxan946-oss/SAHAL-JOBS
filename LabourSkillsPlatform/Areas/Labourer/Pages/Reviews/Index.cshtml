@@ -1,0 +1,35 @@
+@page
+@model LabourSkillsPlatform.Areas.Labourer.Pages.Reviews.IndexModel
+@{
+    ViewData["Title"] = "My Reviews";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold mb-0">My Reviews</h3>
+    <span class="badge bg-primary fs-6">@Model.AverageRating.ToString("N1") &#9733; Average</span>
+</div>
+
+<div class="card p-3">
+    <ul class="list-group list-group-flush">
+        @foreach (var review in Model.Reviews)
+        {
+            <li class="list-group-item">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <div class="fw-semibold">@review.Job.Title</div>
+                        <div class="text-muted small">by @review.Reviewer.FullName &middot; @review.CreatedAt.ToString("dd MMM yyyy")</div>
+                    </div>
+                    <span class="text-warning">@string.Concat(Enumerable.Repeat("&#9733;", review.Rating))@string.Concat(Enumerable.Repeat("&#9734;", 5 - review.Rating))</span>
+                </div>
+                @if (!string.IsNullOrWhiteSpace(review.Comment))
+                {
+                    <p class="text-muted small mt-2 mb-0">"@review.Comment"</p>
+                }
+            </li>
+        }
+        @if (!Model.Reviews.Any())
+        {
+            <li class="list-group-item text-center text-muted py-4">No reviews received yet.</li>
+        }
+    </ul>
+</div>

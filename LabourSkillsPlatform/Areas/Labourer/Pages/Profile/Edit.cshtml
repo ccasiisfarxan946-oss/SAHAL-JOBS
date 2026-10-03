@@ -1,0 +1,49 @@
+@page
+@model LabourSkillsPlatform.Areas.Labourer.Pages.Profile.EditModel
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<h3 class="fw-bold mb-4">My Profile</h3>
+
+<div class="card p-4" style="max-width:640px;">
+    <form method="post">
+        <div asp-validation-summary="All" class="alert alert-danger"></div>
+
+        <div class="mb-3">
+            <label asp-for="Input.FullName" class="form-label"></label>
+            <input asp-for="Input.FullName" class="form-control" />
+            <span asp-validation-for="Input.FullName" class="text-danger small"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Input.Bio" class="form-label">About Me</label>
+            <textarea asp-for="Input.Bio" class="form-control" rows="4" placeholder="Describe your trade background and experience..."></textarea>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label asp-for="Input.YearsOfExperience" class="form-label"></label>
+                <input asp-for="Input.YearsOfExperience" class="form-control" type="number" />
+                <span asp-validation-for="Input.YearsOfExperience" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label asp-for="Input.Location" class="form-label"></label>
+                <input asp-for="Input.Location" class="form-control" placeholder="e.g. Garoowe" />
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Input.AvailabilityStatus" class="form-label"></label>
+            <select asp-for="Input.AvailabilityStatus" class="form-select">
+                <option value="Available">Available</option>
+                <option value="Busy">Busy</option>
+                <option value="Unavailable">Unavailable</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary"><i class="bi bi-check-circle"></i> Save Changes</button>
+    </form>
+</div>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

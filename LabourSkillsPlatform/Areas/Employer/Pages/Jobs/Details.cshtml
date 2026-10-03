@@ -1,0 +1,103 @@
+@page "{id:int}"
+@model LabourSkillsPlatform.Areas.Employer.Pages.Jobs.DetailsModel
+@{
+    ViewData["Title"] = "Job Details";
+    var hired = Model.Applications.FirstOrDefault(a => a.Status == LabourSkillsPlatform.Models.ApplicationStatus.Accepted);
+}
+
+<div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-2">
+    <div>
+        <h3 class="fw-bold mb-1">@Model.Job.Title</h3>
+        <span class="badge badge-status-@Model.Job.Status.ToString().ToLower()">@Model.Job.Status</span>
+        <span class="badge bg-secondary">@Model.Job.Category.Name</span>
+    </div>
+    @if (Model.Job.Status == LabourSkillsPlatform.Models.JobStatus.InProgress)
+    {
+        <form method="post" asp-page-handler="Complete" asp-route-id="@Model.Job.Id" data-confirm="Mark this job as completed?">
+            <button type="submit" class="btn btn-success"><i class="bi bi-check2-circle"></i> Mark as Completed</button>
+        </form>
+    }
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-7">
+        <div class="card p-3 mb-3">
+            <h6 class="fw-bold">Job Description</h6>
+            <p class="text-muted">@Model.Job.Description</p>
+            <div class="row text-muted small">
+                <div class="col-6"><i class="bi bi-geo-alt"></i> @(Model.Job.Location ?? "Not specified")</div>
+                <div class="col-6"><i class="bi bi-cash"></i> $@Model.Job.Budget.ToString("N2") (@Model.Job.JobType)</div>
+            </div>
+            <div class="mt-2">
+                @foreach (var js in Model.Job.JobSkills)
+                {
+                    <span class="badge bg-light text-dark border me-1">@js.Skill.Name</span>
+                }
+            </div>
+        </div>
+
+        @if (Model.Job.Status == LabourSkillsPlatform.Models.JobStatus.Completed && hired is not null && !Model.HasReview)
+        {
+            <div class="card p-3">
+                <h6 class="fw-bold mb-3">Rate @hired.Labourer.User.FullName</h6>
+                <form method="post" asp-page-handler="Rate" asp-route-id="@Model.Job.Id">
+                    <div class="mb-2">
+                        <label class="form-label">Rating</label>
+                        <select asp-for="RatingForm.Rating" class="form-select" style="max-width:150px;">
+                            <option value="5">5 - Excellent</option>
+                            <option value="4">4 - Good</option>
+                            <option value="3">3 - Average</option>
+                            <option value="2">2 - Below Average</option>
+                            <option value="1">1 - Poor</option>
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">Comment</label>
+                        <textarea asp-for="RatingForm.Comment" class="form-control" rows="2"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Review</button>
+                </form>
+            </div>
+        }
+        else if (Model.HasReview)
+        {
+            <div class="alert alert-success">You have already reviewed the labourer for this job.</div>
+        }
+    </div>
+
+    <div class="col-lg-5">
+        <div class="card p-3">
+            <h6 class="fw-bold mb-3">Applications (@Model.Applications.Count)</h6>
+            @foreach (var app in Model.Applications)
+            {
+                <div class="border rounded p-2 mb-2">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <div class="fw-semibold">@app.Labourer.User.FullName</div>
+                            <div class="text-muted small">@(app.Labourer.Location ?? "Location N/A") &middot; @app.Labourer.YearsOfExperience yrs exp</div>
+                            <div class="text-warning small">@app.Labourer.AverageRating.ToString("N1") &#9733; (@app.Labourer.TotalReviews)</div>
+                        </div>
+                        <span class="match-score-pill bg-primary text-white">@app.MatchScore% match</span>
+                    </div>
+                    @if (!string.IsNullOrWhiteSpace(app.CoverMessage))
+                    {
+                        <p class="small text-muted mt-2 mb-1">"@app.CoverMessage"</p>
+                    }
+                    <div class="d-flex justify-content-between align-items-center mt-2">
+                        <span class="badge badge-status-@app.Status.ToString().ToLower()">@app.Status</span>
+                        @if (Model.Job.Status == LabourSkillsPlatform.Models.JobStatus.Open && app.Status == LabourSkillsPlatform.Models.ApplicationStatus.Pending)
+                        {
+                            <form method="post" asp-page-handler="Hire" asp-route-id="@Model.Job.Id" asp-route-applicationId="@app.Id" data-confirm="Hire this labourer for the job?">
+                                <button type="submit" class="btn btn-sm btn-success">Hire</button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            }
+            @if (!Model.Applications.Any())
+            {
+                <p class="text-muted text-center py-3">No applications received yet.</p>
+            }
+        </div>
+    </div>
+</div>

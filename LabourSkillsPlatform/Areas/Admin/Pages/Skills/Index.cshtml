@@ -1,0 +1,66 @@
+@page
+@model LabourSkillsPlatform.Areas.Admin.Pages.Skills.IndexModel
+@{
+    ViewData["Title"] = "Verify Labour Skills";
+}
+
+<h3 class="fw-bold mb-4">Verify Labour Skills</h3>
+
+<div class="card p-3 mb-4">
+    <h6 class="fw-bold mb-3">Pending Verification (<span class="text-warning">@Model.PendingSkills.Count</span>)</h6>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr><th>Labourer</th><th>Skill</th><th>Category</th><th>Proficiency</th><th>Evidence</th><th>Uploaded</th><th class="text-end">Action</th></tr>
+            </thead>
+            <tbody>
+            @foreach (var ls in Model.PendingSkills)
+            {
+                <tr>
+                    <td>@ls.Labourer.User.FullName</td>
+                    <td class="fw-semibold">@ls.Skill.Name</td>
+                    <td>@ls.Skill.Category.Name</td>
+                    <td><span class="badge bg-info text-dark">@ls.ProficiencyLevel</span></td>
+                    <td class="text-muted small">@(ls.Evidence ?? "—")</td>
+                    <td>@ls.UploadedAt.ToString("dd MMM yyyy")</td>
+                    <td class="text-end">
+                        <form method="post" asp-page-handler="Verify" asp-route-id="@ls.Id" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-success"><i class="bi bi-check-lg"></i> Verify</button>
+                        </form>
+                        <form method="post" asp-page-handler="Reject" asp-route-id="@ls.Id" class="d-inline" data-confirm="Reject and remove this skill submission?">
+                            <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-x-lg"></i> Reject</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            @if (!Model.PendingSkills.Any())
+            {
+                <tr><td colspan="7" class="text-center text-muted py-4">No pending skill submissions.</td></tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card p-3">
+    <h6 class="fw-bold mb-3">Recently Verified</h6>
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead><tr><th>Labourer</th><th>Skill</th><th>Verified On</th></tr></thead>
+            <tbody>
+            @foreach (var ls in Model.VerifiedSkills)
+            {
+                <tr>
+                    <td>@ls.Labourer.User.FullName</td>
+                    <td>@ls.Skill.Name <span class="badge bg-success ms-1">Verified</span></td>
+                    <td>@ls.VerifiedDate?.ToString("dd MMM yyyy")</td>
+                </tr>
+            }
+            @if (!Model.VerifiedSkills.Any())
+            {
+                <tr><td colspan="3" class="text-center text-muted py-4">No verified skills yet.</td></tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

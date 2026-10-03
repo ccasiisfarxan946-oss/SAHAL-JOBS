@@ -1,0 +1,86 @@
+@page
+@model LabourSkillsPlatform.Areas.Labourer.Pages.Skills.IndexModel
+@{
+    ViewData["Title"] = "My Skills";
+    ViewData["BodyClass"] = "labourer-skills-page";
+}
+
+<h3 class="fw-bold mb-4">My Skills</h3>
+
+<div class="row g-3">
+    <div class="col-lg-5">
+        <div class="card p-3">
+            <h6 class="fw-bold mb-3">Add a Skill</h6>
+            <form method="post">
+                <div asp-validation-summary="All" class="alert alert-danger"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Input.SkillId" class="form-label"></label>
+                    <select asp-for="Input.SkillId" class="form-select" asp-items="Model.SkillOptions">
+                        <option value="">-- Select Skill --</option>
+                    </select>
+                    <span asp-validation-for="Input.SkillId" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Input.ProficiencyLevel" class="form-label"></label>
+                    <select asp-for="Input.ProficiencyLevel" class="form-select">
+                        <option value="Beginner">Beginner</option>
+                        <option value="Intermediate">Intermediate</option>
+                        <option value="Advanced">Advanced</option>
+                        <option value="Expert">Expert</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Input.Evidence" class="form-label"></label>
+                    <textarea asp-for="Input.Evidence" class="form-control" rows="3" placeholder="e.g. Wired 12 residential homes over 3 years"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Submit for Verification</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-lg-7">
+        <div class="card p-3">
+            <h6 class="fw-bold mb-3">My Submitted Skills</h6>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead><tr><th>Skill</th><th>Category</th><th>Level</th><th>Status</th><th></th></tr></thead>
+                    <tbody>
+                    @foreach (var ls in Model.MySkills)
+                    {
+                        <tr>
+                            <td class="fw-semibold">@ls.Skill.Name</td>
+                            <td class="text-muted small">@ls.Skill.Category.Name</td>
+                            <td><span class="badge bg-info text-dark">@ls.ProficiencyLevel</span></td>
+                            <td>
+                                @if (ls.IsVerified)
+                                {
+                                    <span class="badge bg-success"><i class="bi bi-patch-check"></i> Verified</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Pending Review</span>
+                                }
+                            </td>
+                            <td>
+                                <form method="post" asp-page-handler="Delete" asp-route-id="@ls.Id" data-confirm="Remove this skill?">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                    @if (!Model.MySkills.Any())
+                    {
+                        <tr><td colspan="5" class="text-center text-muted py-4">No skills added yet.</td></tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

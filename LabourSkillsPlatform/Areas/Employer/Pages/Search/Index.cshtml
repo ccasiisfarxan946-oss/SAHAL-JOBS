@@ -1,0 +1,64 @@
+@page
+@model LabourSkillsPlatform.Areas.Employer.Pages.Search.IndexModel
+@{
+    ViewData["Title"] = "Search Labourers";
+}
+
+<h3 class="fw-bold mb-4">Search Labourers</h3>
+
+<div class="card p-3 mb-4">
+    <form method="get" class="row g-2 align-items-end">
+        <div class="col-md-4">
+            <label class="form-label small">Category</label>
+            <select name="CategoryId" class="form-select" asp-items="Model.CategoryOptions">
+                <option value="">All Categories</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label small">Location</label>
+            <input type="text" name="Location" value="@Model.Location" class="form-control" placeholder="e.g. Garoowe" />
+        </div>
+        <div class="col-md-2">
+            <div class="form-check mt-4">
+                <input class="form-check-input" type="checkbox" name="VerifiedOnly" value="true" checked="@Model.VerifiedOnly" id="verifiedOnly" />
+                <label class="form-check-label small" for="verifiedOnly">Verified only</label>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100"><i class="bi bi-search"></i> Search</button>
+        </div>
+    </form>
+</div>
+
+<div class="row g-3">
+    @foreach (var labourer in Model.Results)
+    {
+        <div class="col-md-6 col-lg-4">
+            <div class="card p-3 h-100">
+                <div class="d-flex justify-content-between">
+                    <h6 class="fw-bold mb-1">@labourer.User.FullName</h6>
+                    <span class="badge @(labourer.AvailabilityStatus == LabourSkillsPlatform.Models.AvailabilityStatus.Available ? "bg-success" : "bg-secondary")">
+                        @labourer.AvailabilityStatus
+                    </span>
+                </div>
+                <div class="text-muted small mb-2">
+                    <i class="bi bi-geo-alt"></i> @(labourer.Location ?? "N/A") &middot; @labourer.YearsOfExperience yrs experience
+                </div>
+                <div class="text-warning small mb-2">@labourer.AverageRating.ToString("N1") &#9733; (@labourer.TotalReviews reviews)</div>
+                <div class="mb-2">
+                    @foreach (var ls in labourer.LabourerSkills.Take(4))
+                    {
+                        <span class="badge @(ls.IsVerified ? "bg-primary" : "bg-light text-dark border") me-1 mb-1">
+                            @ls.Skill.Name @(ls.IsVerified ? "✓" : "")
+                        </span>
+                    }
+                </div>
+                <p class="text-muted small flex-grow-1">@(labourer.Bio ?? "")</p>
+            </div>
+        </div>
+    }
+    @if (!Model.Results.Any())
+    {
+        <div class="col-12"><p class="text-center text-muted py-5">No labourers match your search criteria.</p></div>
+    }
+</div>

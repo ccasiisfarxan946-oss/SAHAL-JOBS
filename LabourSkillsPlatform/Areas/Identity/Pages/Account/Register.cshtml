@@ -1,0 +1,84 @@
+@page
+@model LabourSkillsPlatform.Areas.Identity.Pages.Account.RegisterModel
+@{
+    ViewData["Title"] = "Create Account";
+}
+
+<div class="auth-wrapper d-flex align-items-center justify-content-center">
+    <div class="card auth-card shadow-sm">
+        <div class="card-body p-4 p-md-5">
+            <div class="text-center mb-4">
+                <h3 class="fw-bold text-primary">Create Your Account</h3>
+                <p class="text-muted">Join Laboure Skills Platform as an Employer or Labourer</p>
+            </div>
+
+            <form method="post" novalidate>
+                <div asp-validation-summary="All" class="alert alert-danger" data-val-summary></div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">I am registering as</label>
+                    <div class="btn-group w-100 role-toggle" role="group">
+                        <input type="radio" class="btn-check" name="Input.AccountType" id="roleLabourer" value="Labourer" checked>
+                        <label class="btn btn-outline-primary" for="roleLabourer"><i class="bi bi-tools"></i> Labourer</label>
+
+                        <input type="radio" class="btn-check" name="Input.AccountType" id="roleEmployer" value="Employer">
+                        <label class="btn btn-outline-primary" for="roleEmployer"><i class="bi bi-briefcase"></i> Employer</label>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Input.FullName" class="form-label">Full Name</label>
+                    <input asp-for="Input.FullName" class="form-control" placeholder="e.g. Ahmed Ali" />
+                    <span asp-validation-for="Input.FullName" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3" id="companyNameGroup" style="display:none;">
+                    <label asp-for="Input.CompanyName" class="form-label">Company Name</label>
+                    <input asp-for="Input.CompanyName" class="form-control" placeholder="e.g. Growe Construction Ltd" />
+                    <span asp-validation-for="Input.CompanyName" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Input.Email" class="form-label">Email Address</label>
+                    <input asp-for="Input.Email" class="form-control" placeholder="name@example.com" />
+                    <span asp-validation-for="Input.Email" class="text-danger small"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Input.Password" class="form-label">Password</label>
+                        <input asp-for="Input.Password" class="form-control" />
+                        <span asp-validation-for="Input.Password" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Input.ConfirmPassword" class="form-label">Confirm Password</label>
+                        <input asp-for="Input.ConfirmPassword" class="form-control" />
+                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 py-2 mt-2">Create Account</button>
+
+                <p class="text-center mt-3 mb-0">
+                    Already have an account? <a asp-page="./Login">Sign in</a>
+                </p>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const employerRadio = document.getElementById('roleEmployer');
+        const labourerRadio = document.getElementById('roleLabourer');
+        const companyGroup = document.getElementById('companyNameGroup');
+
+        function toggleCompanyField() {
+            companyGroup.style.display = employerRadio.checked ? 'block' : 'none';
+        }
+        employerRadio.addEventListener('change', toggleCompanyField);
+        labourerRadio.addEventListener('change', toggleCompanyField);
+        toggleCompanyField();
+    </script>
+}

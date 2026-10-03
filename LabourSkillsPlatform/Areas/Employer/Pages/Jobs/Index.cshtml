@@ -1,0 +1,51 @@
+@page
+@model LabourSkillsPlatform.Areas.Employer.Pages.Jobs.IndexModel
+@{
+    ViewData["Title"] = "Manage Job Posts";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold mb-0">Manage Job Posts</h3>
+    @if (Model.IsApproved)
+    {
+        <a asp-page="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Post a Job</a>
+    }
+    else
+    {
+        <span class="badge bg-warning text-dark">Awaiting approval to post jobs</span>
+    }
+</div>
+
+<div class="card p-3">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead><tr><th>Title</th><th>Category</th><th>Budget</th><th>Applications</th><th>Status</th><th class="text-end">Actions</th></tr></thead>
+            <tbody>
+            @foreach (var job in Model.Jobs)
+            {
+                <tr>
+                    <td><a asp-page="Details" asp-route-id="@job.Id" class="fw-semibold text-decoration-none">@job.Title</a></td>
+                    <td>@job.Category.Name</td>
+                    <td>$@job.Budget.ToString("N2")</td>
+                    <td>@job.Applications.Count</td>
+                    <td><span class="badge badge-status-@job.Status.ToString().ToLower()">@job.Status</span></td>
+                    <td class="text-end">
+                        <a asp-page="Details" asp-route-id="@job.Id" class="btn btn-sm btn-outline-primary">View</a>
+                        @if (job.Status == LabourSkillsPlatform.Models.JobStatus.Open)
+                        {
+                            <a asp-page="Edit" asp-route-id="@job.Id" class="btn btn-sm btn-outline-secondary">Edit</a>
+                            <form method="post" asp-page-handler="Close" asp-route-id="@job.Id" class="d-inline" data-confirm="Close this job posting?">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Close</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+            @if (!Model.Jobs.Any())
+            {
+                <tr><td colspan="6" class="text-center text-muted py-4">No job posts yet.</td></tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

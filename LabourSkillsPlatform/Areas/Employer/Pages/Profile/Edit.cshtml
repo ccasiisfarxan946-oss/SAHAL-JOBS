@@ -1,0 +1,49 @@
+@page
+@model LabourSkillsPlatform.Areas.Employer.Pages.Profile.EditModel
+@{
+    ViewData["Title"] = "Company Profile";
+}
+
+<h3 class="fw-bold mb-4">Company Profile</h3>
+
+<div class="card p-4" style="max-width:640px;">
+    @if (Model.IsApproved)
+    {
+        <span class="badge bg-success mb-3 align-self-start">Approved Employer</span>
+    }
+    else
+    {
+        <span class="badge bg-warning text-dark mb-3 align-self-start">Pending Approval</span>
+    }
+
+    <form method="post">
+        <div asp-validation-summary="All" class="alert alert-danger"></div>
+
+        <div class="mb-3">
+            <label asp-for="Input.FullName" class="form-label"></label>
+            <input asp-for="Input.FullName" class="form-control" />
+            <span asp-validation-for="Input.FullName" class="text-danger small"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Input.CompanyName" class="form-label"></label>
+            <input asp-for="Input.CompanyName" class="form-control" />
+            <span asp-validation-for="Input.CompanyName" class="text-danger small"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Input.ContactPerson" class="form-label"></label>
+            <input asp-for="Input.ContactPerson" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="Input.CompanyAddress" class="form-label"></label>
+            <input asp-for="Input.CompanyAddress" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="Input.Description" class="form-label">About the Company</label>
+            <textarea asp-for="Input.Description" class="form-control" rows="4"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary"><i class="bi bi-check-circle"></i> Save Changes</button>
+    </form>
+</div>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

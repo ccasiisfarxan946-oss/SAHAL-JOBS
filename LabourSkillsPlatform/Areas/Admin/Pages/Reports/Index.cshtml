@@ -1,0 +1,95 @@
+@page
+@model LabourSkillsPlatform.Areas.Admin.Pages.Reports.IndexModel
+@{
+    ViewData["Title"] = "Reports";
+}
+
+<h3 class="fw-bold mb-4">System Reports</h3>
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+        <div class="card metric-card p-3">
+            <div class="text-muted small">Total Applications</div>
+            <div class="metric-value text-primary">@Model.TotalApplications</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card metric-card p-3">
+            <div class="text-muted small">Acceptance Rate</div>
+            <div class="metric-value text-primary">@Model.AcceptanceRate%</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card metric-card p-3">
+            <div class="text-muted small">Avg. Match Score</div>
+            <div class="metric-value text-primary">@Model.AverageMatchScore.ToString("N1")</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card metric-card p-3">
+            <div class="text-muted small">Accepted Applications</div>
+            <div class="metric-value text-primary">@Model.AcceptedApplications</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-6">
+        <div class="card p-3">
+            <h6 class="fw-bold mb-3">Jobs by Category</h6>
+            <table class="table table-sm">
+                <thead><tr><th>Category</th><th>Jobs Posted</th></tr></thead>
+                <tbody>
+                @foreach (var row in Model.JobsByCategory)
+                {
+                    <tr><td>@row.CategoryName</td><td>@row.JobCount</td></tr>
+                }
+                @if (!Model.JobsByCategory.Any())
+                {
+                    <tr><td colspan="2" class="text-center text-muted py-3">No data yet.</td></tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card p-3">
+            <h6 class="fw-bold mb-3">Jobs by Status</h6>
+            <table class="table table-sm">
+                <thead><tr><th>Status</th><th>Count</th></tr></thead>
+                <tbody>
+                @foreach (var row in Model.JobsByStatus)
+                {
+                    <tr><td><span class="badge badge-status-@row.Status.ToLower()">@row.Status</span></td><td>@row.Count</td></tr>
+                }
+                @if (!Model.JobsByStatus.Any())
+                {
+                    <tr><td colspan="2" class="text-center text-muted py-3">No data yet.</td></tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="card p-3">
+            <h6 class="fw-bold mb-3">Top Rated Labourers</h6>
+            <table class="table table-sm">
+                <thead><tr><th>Labourer</th><th>Average Rating</th><th>Total Reviews</th></tr></thead>
+                <tbody>
+                @foreach (var row in Model.TopRatedLabourers)
+                {
+                    <tr>
+                        <td>@row.LabourerName</td>
+                        <td class="text-warning">@row.Rating.ToString("N1") &#9733;</td>
+                        <td>@row.Reviews</td>
+                    </tr>
+                }
+                @if (!Model.TopRatedLabourers.Any())
+                {
+                    <tr><td colspan="3" class="text-center text-muted py-3">No reviews yet.</td></tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

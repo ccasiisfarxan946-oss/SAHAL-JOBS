@@ -1,0 +1,67 @@
+@page
+@model LabourSkillsPlatform.Pages.IndexModel
+@{
+    ViewData["Title"] = "Home";
+}
+
+<section class="hero-section">
+    <div class="container text-center">
+        <h1 class="display-5 mb-3">Connecting Skilled Labourers with Real Opportunities</h1>
+        <p class="lead mb-4 mx-auto" style="max-width:640px;">
+            Laboure Skills Platform verifies real skills, matches you fairly, and pays the way your community already does.
+        </p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-warning btn-lg px-4 fw-semibold">Join as Labourer</a>
+            <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-outline-light btn-lg px-4">Hire Talent</a>
+        </div>
+    </div>
+</section>
+
+<section class="container py-5">
+    <div class="row g-3 text-center">
+        <div class="col-6 col-md-3">
+            <div class="stat-card p-3">
+                <div class="fs-3 fw-bold text-primary">@Model.TotalLabourers</div>
+                <div class="text-muted small">Registered Labourers</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card p-3">
+                <div class="fs-3 fw-bold text-primary">@Model.TotalEmployers</div>
+                <div class="text-muted small">Approved Employers</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card p-3">
+                <div class="fs-3 fw-bold text-primary">@Model.TotalJobsPosted</div>
+                <div class="text-muted small">Jobs Posted</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card p-3">
+                <div class="fs-3 fw-bold text-primary">@Model.TotalCategories</div>
+                <div class="text-muted small">Labour Categories</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container pb-5">
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="feature-icon mb-3"><i class="bi bi-patch-check"></i></div>
+            <h5>Verified Skills</h5>
+            <p class="text-muted">Every skill can be reviewed and verified by our administrators, so employers know who to trust.</p>
+        </div>
+        <div class="col-md-4">
+            <div class="feature-icon mb-3"><i class="bi bi-diagram-3"></i></div>
+            <h5>Smart Matching</h5>
+            <p class="text-muted">Our matching engine scores labourers against job requirements using skills, verification and ratings.</p>
+        </div>
+        <div class="col-md-4">
+            <div class="feature-icon mb-3"><i class="bi bi-star"></i></div>
+            <h5>Fair Reviews</h5>
+            <p class="text-muted">Employers and labourers rate each other after every job, building a transparent reputation system.</p>
+        </div>
+    </div>
+</section>

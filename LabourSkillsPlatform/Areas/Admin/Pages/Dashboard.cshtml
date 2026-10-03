@@ -1,0 +1,117 @@
+@page
+@model LabourSkillsPlatform.Areas.Admin.Pages.DashboardModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<h3 class="fw-bold mb-4">Admin Dashboard</h3>
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+        <div class="card metric-card p-3">
+            <div class="text-muted small">Total Users</div>
+            <div class="metric-value text-primary">@Model.TotalUsers</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card metric-card p-3">
+            <div class="text-muted small">Labourers / Employers</div>
+            <div class="metric-value text-primary">@Model.TotalLabourers / @Model.TotalEmployers</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card metric-card p-3">
+            <div class="text-muted small">Open Jobs</div>
+            <div class="metric-value text-primary">@Model.OpenJobs <span class="fs-6 text-muted">/ @Model.TotalJobs</span></div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card metric-card p-3">
+            <div class="text-muted small">Categories</div>
+            <div class="metric-value text-primary">@Model.TotalCategories</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-6">
+        <div class="card p-3 border-start border-4 border-warning">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="fw-semibold">Pending Employer Approvals</div>
+                    <div class="text-muted small">Employers waiting for verification</div>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <span class="fs-3 fw-bold">@Model.PendingEmployerApprovals</span>
+                    <a asp-page="/Employers/Index" class="btn btn-sm btn-outline-primary">Review</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card p-3 border-start border-4 border-info">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="fw-semibold">Pending Skill Verifications</div>
+                    <div class="text-muted small">Labourer-uploaded skills to verify</div>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <span class="fs-3 fw-bold">@Model.PendingSkillVerifications</span>
+                    <a asp-page="/Skills/Index" class="btn btn-sm btn-outline-primary">Review</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-7">
+        <div class="card p-3">
+            <h6 class="fw-bold mb-3">Recent Jobs</h6>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead><tr><th>Title</th><th>Employer</th><th>Category</th><th>Status</th></tr></thead>
+                    <tbody>
+                    @foreach (var job in Model.RecentJobs)
+                    {
+                        <tr>
+                            <td>@job.Title</td>
+                            <td>@job.Employer.CompanyName</td>
+                            <td>@job.Category.Name</td>
+                            <td><span class="badge badge-status-@job.Status.ToString().ToLower()">@job.Status</span></td>
+                        </tr>
+                    }
+                    @if (!Model.RecentJobs.Any())
+                    {
+                        <tr><td colspan="4" class="text-center text-muted py-3">No jobs posted yet.</td></tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card p-3">
+            <h6 class="fw-bold mb-3">Recent Reviews</h6>
+            <ul class="list-group list-group-flush">
+                @foreach (var review in Model.RecentReviews)
+                {
+                    <li class="list-group-item">
+                        <div class="d-flex justify-content-between">
+                            <span>@review.Reviewer.FullName &rarr; @review.Reviewee.FullName</span>
+                            <span class="text-warning">@string.Concat(Enumerable.Repeat("&#9733;", review.Rating))</span>
+                        </div>
+                        @if (!string.IsNullOrWhiteSpace(review.Comment))
+                        {
+                            <div class="text-muted small">@review.Comment</div>
+                        }
+                    </li>
+                }
+                @if (!Model.RecentReviews.Any())
+                {
+                    <li class="list-group-item text-center text-muted">No reviews yet.</li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>
