@@ -15,6 +15,8 @@ namespace LabourSkillsPlatform.Data
             var context = services.GetRequiredService<ApplicationDbContext>();
             var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
             var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+            var configuration = services.GetRequiredService<IConfiguration>();
+            var environment = services.GetRequiredService<IHostEnvironment>();
 
             await context.Database.MigrateAsync();
 
@@ -28,7 +30,20 @@ namespace LabourSkillsPlatform.Data
             }
 
             // ---------- Default Admin ----------
-            const string adminEmail = "admin@lsp.local";
+            var adminEmail = configuration["SeedAdmin:Email"];
+            var adminPassword = configuration["SeedAdmin:Password"];
+            if (environment.IsDevelopment())
+            {
+                adminEmail ??= "admin@lsp.local";
+                adminPassword ??= "Admin@12345";
+            }
+
+            if (string.IsNullOrWhiteSpace(adminEmail) || string.IsNullOrWhiteSpace(adminPassword))
+            {
+                throw new InvalidOperationException(
+                    "Set SeedAdmin:Email and SeedAdmin:Password in production configuration before starting the application.");
+            }
+
             if (await userManager.FindByEmailAsync(adminEmail) is null)
             {
                 var admin = new ApplicationUser
@@ -40,7 +55,7 @@ namespace LabourSkillsPlatform.Data
                     IsActive = true
                 };
 
-                var result = await userManager.CreateAsync(admin, "Admin@12345");
+                var result = await userManager.CreateAsync(admin, adminPassword);
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(admin, Roles.Admin);
